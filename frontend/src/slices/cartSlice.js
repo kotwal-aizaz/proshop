@@ -5,7 +5,6 @@ const initialState = localStorage.getItem("cart")
   ? JSON.parse(localStorage.getItem("cart"))
   : { cartItems: [] };
 
-
 const cartSlice = createSlice({
   name: "cart",
   initialState,
@@ -17,38 +16,21 @@ const cartSlice = createSlice({
         (cartItem) => cartItem._id === item._id
       );
       if (isItemExist) {
-        state.cartItems = state.cartItems.map((cartItem) =>
-          cartItem._id === item._id ? { ...item, qty: item.qty + 1} : cartItem
+        state.cartItems = state.cartItems.map(
+          (cartItem) => (cartItem._id === item._id ? { ...item } : cartItem) //!Note: There's no need to manually increment the quantity count, as the user will specify the desired quantity when adding an item to the cart. Any changes to the quantity on the cart or product screen will be handled by passing the entire cartItem object as a payload, including the updated quantity.
         );
       } else state.cartItems = [...state.cartItems, item];
-      /*
-       const itemsPrice = state.cartItems.reduce(
-         (acc, item) => acc + (item.price * 100 * item.qty) / 100,
-         0
-       );
-       state.itemsPrice = addDecimals(itemsPrice);
 
-       // Calculate the shipping price
-       const shippingPrice = itemsPrice > 100 ? 0 : 10;
-       state.shippingPrice = addDecimals(shippingPrice);
-
-       // Calculate the tax price
-       const taxPrice = 0.15 * itemsPrice;
-       state.taxPrice = addDecimals(taxPrice);
-
-       const totalPrice = itemsPrice + shippingPrice + taxPrice;
-       // Calculate the total price
-       state.totalPrice = addDecimals(totalPrice);
-
-       // Save the cart to localStorage
-       localStorage.setItem("cart", JSON.stringify(state));
-
-      */
-     return updateCart(state) // This function returns an updated state and that counts as a state update. So, the state of the slice will be updated.  
-      
+      return updateCart(state); // This function returns an updated state and that counts as a state update. So, the state of the slice will be updated.
+    },
+    removeFromCart: (state, action) => {
+      state.cartItems = state.cartItems.filter(
+        (x) => x._id !== action.payload._id
+      );
+      return updateCart(state);
     },
   },
 });
 
-export const { addToCart } = cartSlice.actions;
+export const { addToCart, removeFromCart } = cartSlice.actions;
 export default cartSlice.reducer;
