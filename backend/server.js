@@ -8,14 +8,15 @@ import userRoutes from "./routes/userRoutes.js";
 // Middlewares
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 // Imports ends...
-
+import cookieParser from "cookie-parser";
 const port = process.env.PORT || 5000;
 connectDB(); // connect to MongoDB
 const app = express();
 // Body parser middleware 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
-
+// Cookie parser
+app.use(cookieParser())
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
