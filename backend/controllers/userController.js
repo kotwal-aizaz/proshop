@@ -10,12 +10,15 @@ import generateToken from "../utils/generateToken.js";
 
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  console.log(typeof password);
 
+  // Check for the existing user
   const user = await User.findOne({ email });
+  // Check: Valid user password
   if (user && (await user.matchPassword(password))) {
+    // Generate: JWT Token using util method
     generateToken(res, user._id);
-    res.json({
+    // Generate: User object
+    res.status(200).json({
       _id: user._id,
       name: user.name,
       email: user.email,
@@ -79,11 +82,23 @@ const logoutUser = asyncHandler(async (req, res) => {
 /**
  * @description Get user profile
  * @route  GET /api/users/profile
- * @access Public
+ * @access Private
  */
 
 const getUserProfile = asyncHandler(async (req, res) => {
-  res.send("get user profile");
+  // Get the user
+  const user = await User.findById(req.user._id); // we have access to the user id as the user will be logged in.
+  if (user) {
+    res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
 });
 
 /**
@@ -93,7 +108,25 @@ const getUserProfile = asyncHandler(async (req, res) => {
  */
 
 const updateUserProfile = asyncHandler(async (req, res) => {
-  res.send("update user");
+  const user = await User.findById(req.user._id);
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+
+    const updatedUser = await user.save();
+    res.status(200).json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    });
+  } else {
+    res.status(400);
+    throw new Error("User not found");
+  }
 });
 
 /**
