@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 // import "bootstrap/dist/css/bootstrap.min.css";
 import "./bootstrap.custom.css";
+
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
@@ -16,14 +17,19 @@ import ProductScreen from "./screens/ProductScreen";
 import { Provider } from "react-redux";
 import store from "./store";
 import CartScreen from "./screens/CartScreen";
+import LoginScreen from "./screens/LoginScreen";
+import RegisterScreen from "./screens/RegisterScreen";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route index path="/" element={<HomeScreen />} />
       <Route path="/product/:id" element={<ProductScreen />} />
-      <Route path="/cart" element={<CartScreen/>} />
-      
+      <Route path="/cart" element={<CartScreen />} />
+      <Route path="/login" element={<LoginScreen />} />
+      <Route path="/register" element={<RegisterScreen />} />
+      <Route path="/shipping" element={<div>Shipping page</div>} />
+      <Route path="/profile" element={<div>Profile Page</div>} />
     </Route>
   )
 );
