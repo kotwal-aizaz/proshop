@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const OrderSchema = new mongoose.Schema(
+const orderSchema = mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -9,16 +9,14 @@ const OrderSchema = new mongoose.Schema(
     },
     orderItems: [
       {
-        name: {
-          name: { type: String, required: true },
-          qty: { type: Number, required: true },
-          image: { type: String, required: true },
-          price: { type: Number, required: true },
-          product: {
-            type: mongoose.Schema.Types.ObjectId,
-            requied: true,
-            ref: "Product",
-          },
+        name: { type: String, required: true },
+        qty: { type: Number, required: true },
+        image: { type: String, required: true },
+        price: { type: Number, required: true },
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          ref: "Product",
         },
       },
     ],
@@ -66,7 +64,7 @@ const OrderSchema = new mongoose.Schema(
     paidAt: {
       type: Date,
     },
-    isDelieverd: {
+    isDelivered: {
       type: Boolean,
       required: true,
       default: false,
@@ -75,8 +73,11 @@ const OrderSchema = new mongoose.Schema(
       type: Date,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
-const Order = mongoose.model("Order", OrderSchema);
-export default Order
+const Order = mongoose.model("Order", orderSchema);
+
+export default Order;
